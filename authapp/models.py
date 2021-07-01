@@ -7,6 +7,8 @@ from django.dispatch import receiver
 
 from django.utils.timezone import now
 
+from django.utils.timezone import now
+
 
 class ShopUser(AbstractUser):
     avatar = models.ImageField(upload_to='users_avatars', blank=True)
@@ -20,7 +22,7 @@ class ShopUser(AbstractUser):
             return False
         return True
 
-
+      
 class ShopUserProfile(models.Model):
     MALE = 'M'
     FEMALE = 'W'

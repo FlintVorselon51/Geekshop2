@@ -69,7 +69,6 @@ class ShopUserEditForm(UserChangeForm):
 
         return data
 
-
 class ShopUserProfileEditForm(forms.ModelForm):
     class Meta:
         model = ShopUserProfile
