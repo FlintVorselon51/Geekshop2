@@ -38,7 +38,7 @@ class Order(models.Model):
         _items = self.orderitems.select_related()
         return sum(list(map(lambda x: x.get_product_cost(), _items)))
 
-    def delete(self):
+    def delete(self, **kwargs):
         for item in self.orderitems.all():
             item.product.quantity += item.quantity
             item.product.save()
