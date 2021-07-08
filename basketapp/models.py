@@ -42,6 +42,10 @@ class Basket(models.Model):
 
     total_cost = property(_get_total_cost)
 
+    @staticmethod
+    def get_item(pk):
+        return Basket.objects.get(pk=pk)
+
     def delete(self, *args, **kwargs):
         self.product.quantity += self.quantity
         self.product.save()
