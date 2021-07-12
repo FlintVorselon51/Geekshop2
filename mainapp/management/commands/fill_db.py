@@ -15,10 +15,10 @@ class Command(BaseCommand):
 
         ProductCategory.objects.all().delete()
         for category in categories:
+            print(category)
             new_category = ProductCategory(**category)
             new_category.save()
-        
-        
+
         products = load_from_json('products')
 
         Product.objects.all().delete()
