@@ -40,7 +40,9 @@ INSTALLED_APPS = [
     'basketapp',
     'adminapp',
     'social_django',
-    'ordersapp'
+    'ordersapp',
+    'debug_toolbar',
+    'template_profiler_panel'
 ]
 
 MIDDLEWARE = [
@@ -171,8 +173,6 @@ SOCIAL_AUTH_PIPELINE = (
     'social_core.pipeline.social_auth.associate_user',
     'social_core.pipeline.social_auth.load_extra_data',
     'social_core.pipeline.user.user_details',
-    'debug_toolbar',
-    'template_profiler_panel'
 )
 
 AUTHENTICATION_BACKENDS = (
