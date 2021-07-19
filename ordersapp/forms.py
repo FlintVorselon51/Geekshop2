@@ -1,5 +1,6 @@
 from django import forms
 
+from mainapp.models import Product
 from ordersapp.models import Order, OrderItem
 
 
@@ -18,7 +19,6 @@ class OrderEditForm(forms.ModelForm):
 class OrderItemEditForm(forms.ModelForm):
     price = forms.CharField(label='цена', required=False)
 
-
     class Meta:
         model = OrderItem
         exclude = ()
@@ -28,3 +28,4 @@ class OrderItemEditForm(forms.ModelForm):
         for field_name, field in self.fields.items():
             field.widget.attrs['class'] = 'form-control'
             field.help_text = ''
+            self.fields['product'].queryset = Product.objects.all().select_related()
