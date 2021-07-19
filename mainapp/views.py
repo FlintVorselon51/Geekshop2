@@ -1,11 +1,38 @@
-import datetime, random, os, json
-from django.shortcuts import render, get_object_or_404
-from mainapp.models import ProductCategory, Product
+import json
+import os
+import random
 
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
+from django.shortcuts import render, get_object_or_404
+from django.views.decorators.cache import cache_page
 
+from mainapp.models import ProductCategory, Product
+from django.conf import settings
+from django.core.cache import cache
 
 JSON_PATH = 'mainapp/json'
+
+
+def get_links_menu():
+    if settings.LOW_CACHE:
+        key = 'links_menu'
+        links_menu = cache.get(key)
+        if links_menu is None:
+            links_menu = ProductCategory.objects.filter(is_active=True)
+            cache.set(key, links_menu)
+        return links_menu
+    return ProductCategory.objects.filter(is_active=True)
+
+
+def get_product(pk):
+    if settings.LOW_CACHE:
+        key = f'product_{pk}'
+        product_item = cache.get(key)
+        if product_item is None:
+            product_item = Product.objects.get(pk=pk)
+            cache.set(key, product_item)
+        return product_item
+    return Product.objects.get(pk=pk)
 
 
 def load_from_json(file_name):
@@ -23,7 +50,6 @@ def get_same_products(hot_product):
     same_products = Product.objects.filter(category=hot_product.category, is_active=True).exclude(pk=hot_product.pk)[:3]
     
     return same_products
-        
 
         
 def main(request):
@@ -40,7 +66,7 @@ def main(request):
 
 def products(request, pk=None, page=1):   
     title = 'продукты'
-    links_menu = ProductCategory.objects.filter(is_active=True)
+    links_menu = get_links_menu()
            
     if pk:
         if pk == '0':
@@ -75,19 +101,21 @@ def products(request, pk=None, page=1):
     
     content = {
         'title': title,
-        'links_menu': links_menu, 
+        'links_menu': links_menu,
         'hot_product': hot_product,
         'same_products': same_products,
     }
     
     return render(request, 'mainapp/products.html', content)
     
-    
+
+@cache_page(3600)
 def product(request, pk):
     title = 'продукты'
-    links_menu = ProductCategory.objects.filter(is_active=True)
+    links_menu = get_links_menu()
 
-    product = get_object_or_404(Product, pk=pk)
+    # product = get_object_or_404(Product, pk=pk)
+    product = get_product(pk)
     
     content = {
         'title': title, 
