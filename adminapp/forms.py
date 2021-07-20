@@ -5,9 +5,14 @@ from django.db.models import F
 from authapp.models import ShopUser
 from authapp.forms import ShopUserEditForm
 from mainapp.models import ProductCategory
-from adminapp.views import db_profile_by_type
 
 from mainapp.models import Product
+
+
+def db_profile_by_type(prefix, t, queries):
+    update_queries = list(filter(lambda x: t in x['sql'], queries))
+    print(f'db_profile {t} for {prefix}:')
+    [print(query['sql']) for query in update_queries]
 
 
 class ShopUserAdminEditForm(ShopUserEditForm):
