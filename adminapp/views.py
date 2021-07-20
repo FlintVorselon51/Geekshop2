@@ -194,3 +194,9 @@ def product_delete(request, pk):
     }
 
     return render(request, 'adminapp/product_delete.html', content)
+
+
+def db_profile_by_type(prefix, t, queries):
+    update_queries = list(filter(lambda x: t in x['sql'], queries))
+    print(f'db_profile {t} for {prefix}:')
+    [print(query['sql']) for query in update_queries]
