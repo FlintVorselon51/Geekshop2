@@ -10,6 +10,8 @@ from authapp.models import ShopUser
 
 
 def login(request):
+    if request.user.is_authenticated:
+        return HttpResponseRedirect(reverse('main'))
     title = 'вход'
     
     login_form = ShopUserLoginForm(data=request.POST or None)
@@ -49,6 +51,7 @@ def register(request):
     
     if request.method == 'POST':
         register_form = ShopUserRegisterForm(request.POST, request.FILES)
+        # print(register_form.errors)
     
         if register_form.is_valid():
             user = register_form.save()
@@ -97,5 +100,5 @@ def verify(request, email, key):
         user.activation_key = ''
         user.key_created = None
         user.save()
-        auth.login(request, user)
+        auth.login(request, user, backend='django.contrib.auth.backends.ModelBackend')
     return render(request, 'authapp/verify.html')
