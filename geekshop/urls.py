@@ -1,5 +1,6 @@
 # from django.conf.urls import url, include
-from django.conf.urls import include
+import django
+from django.conf.urls import include, url
 from django.contrib import admin
 import mainapp.views as mainapp
 
@@ -19,8 +20,11 @@ urlpatterns = [
     path('order/', include('ordersapp.urls', namespace='order'))
 ]
 
+urlpatterns += [
+    url(r'^media/(?P<path>.*)$', django.views.static.serve, {
+    'document_root': settings.MEDIA_ROOT}),]
+
 if settings.DEBUG:
-    urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
 
     import debug_toolbar
 
